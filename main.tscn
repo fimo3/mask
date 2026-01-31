@@ -1,36 +1,131 @@
-[gd_scene load_steps=3 format=3 uid="uid://bph5bu5g2y5po"]
+[gd_scene load_steps=15 format=3 uid="uid://bph5bu5g2y5po"]
 
 [ext_resource type="Script" uid="uid://bu6kibkxnfi6l" path="res://spawner.gd" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://c06akxsdcuwvs" path="res://shop.tscn" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cn56v8mxm3t7w" path="res://placeholder.gd" id="3_kek77"]
+[ext_resource type="FontFile" uid="uid://bvgohc7oft7m7" path="res://Assets/PirataOne-Regular.ttf" id="4_7mycd"]
+[ext_resource type="Texture2D" uid="uid://drtcgmm0lrs78" path="res://Assets/BG2.png" id="5_7mycd"]
+[ext_resource type="Script" uid="uid://y0chrksep62e" path="res://bank.gd" id="5_272bh"]
+[ext_resource type="Texture2D" uid="uid://jcytvtec214q" path="res://Assets/BG1.png" id="5_lquwl"]
+[ext_resource type="AudioStream" uid="uid://drsrmcefhpprk" path="res://Assets/Men At Work - Down Under (Official HD Video).mp3" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://v8k5uxj37q15" path="res://inventory_item.tscn" id="7_5vw27"]
+[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="9_4c57u"]
+[ext_resource type="Texture2D" uid="uid://b20a1uc2m4w0l" path="res://Assets/Mouth.png" id="9_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://yyf7wlwptr1t" path="res://Assets/Ears.png" id="10_w48qg"]
+[ext_resource type="Texture2D" uid="uid://drihiaivb3r8v" path="res://Assets/Eyes.png" id="11_vivmo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lquwl"]
+radius = 94.08507
+
+[sub_resource type="LabelSettings" id="LabelSettings_272bh"]
+font = ExtResource("4_7mycd")
+font_size = 33
+outline_size = 2
+outline_color = Color(1, 1, 0, 0.7058824)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ig7tw")
 
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(0.60007524, 0.6000001)
+texture = ExtResource("5_lquwl")
+
+[node name="Placeholder" type="Area2D" parent="."]
+position = Vector2(244, 301)
+script = ExtResource("3_kek77")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Placeholder"]
+position = Vector2(-7, 82)
+shape = SubResource("CircleShape2D_lquwl")
+
 [node name="SpawnPoint" type="Marker2D" parent="."]
-position = Vector2(-76, 228)
+position = Vector2(-100, 300)
 
 [node name="Start" type="Marker2D" parent="SpawnPoint"]
 
 [node name="Center" type="Marker2D" parent="SpawnPoint"]
-position = Vector2(400, 0)
+position = Vector2(344, 0)
 
 [node name="End" type="Marker2D" parent="SpawnPoint"]
-position = Vector2(745, 0)
+position = Vector2(753, 0)
 
-[node name="Shop" parent="." instance=ExtResource("2_0xm2m")]
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Next" type="Button" parent="."]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 816.0
-offset_top = 548.0
-offset_right = 1152.0
-offset_bottom = 652.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Next"
+[node name="OverlayBackground" type="Sprite2D" parent="UI"]
+position = Vector2(576, 324)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("5_7mycd")
 
-[connection signal="pressed" from="Next" to="." method="_on_next_button_pressed"]
+[node name="Next" type="Button" parent="UI"]
+offset_left = 770.0
+offset_top = 565.0
+offset_right = 1151.0
+offset_bottom = 648.0
+text = "Next
+"
+
+[node name="Bank" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_272bh")
+
+[node name="Money" type="Label" parent="UI/Bank"]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 362.0
+offset_right = 139.0
+offset_bottom = 406.0
+rotation = -0.08726646
+text = "88.88$"
+label_settings = SubResource("LabelSettings_272bh")
+
+[node name="Panel" type="Panel" parent="UI"]
+offset_left = 536.0
+offset_right = 1121.0
+offset_bottom = 621.0
+
+[node name="Slot 0" parent="UI/Panel" instance=ExtResource("7_5vw27")]
+layout_mode = 0
+offset_left = 101.0
+offset_top = 137.0
+offset_right = 101.0
+offset_bottom = 137.0
+mask_icon = ExtResource("9_4c57u")
+
+[node name="Slot 1" parent="UI/Panel" instance=ExtResource("7_5vw27")]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 137.0
+offset_right = 233.0
+offset_bottom = 137.0
+mask_type = 1
+mask_icon = ExtResource("9_ycdy4")
+
+[node name="Slot 2" parent="UI/Panel" instance=ExtResource("7_5vw27")]
+layout_mode = 0
+offset_left = 365.0
+offset_top = 137.0
+offset_right = 365.0
+offset_bottom = 137.0
+mask_type = 2
+mask_icon = ExtResource("10_w48qg")
+
+[node name="Slot 3" parent="UI/Panel" instance=ExtResource("7_5vw27")]
+layout_mode = 0
+offset_left = 497.0
+offset_top = 137.0
+offset_right = 497.0
+offset_bottom = 137.0
+mask_type = 3
+mask_icon = ExtResource("11_vivmo")
+
+[node name="AmbientAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_7mycd")
+volume_db = 10.097
+pitch_scale = 0.77
+attenuation = 0.40612614
+bus = &"Background Music"
+
+[connection signal="pressed" from="UI/Next" to="." method="_on_next_button_pressed"]

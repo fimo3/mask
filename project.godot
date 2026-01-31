@@ -14,3 +14,7 @@ config/name="mask"
 run/main_scene="uid://bph5bu5g2y5po"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://Assets/icon.svg"
+
+[autoload]
+
+GameManager="*res://game_manager.gd"

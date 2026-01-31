@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://dgidbdxx6n8se"]
+[gd_scene load_steps=8 format=3 uid="uid://dgidbdxx6n8se"]
 
 [ext_resource type="Script" uid="uid://dh7o4gpc6tnxf" path="res://person.gd" id="1_0pife"]
-[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="2_hncb1"]
+[ext_resource type="Texture2D" uid="uid://md3av6eokquj" path="res://Assets/LongNose.png" id="2_hncb1"]
+[ext_resource type="Texture2D" uid="uid://ttkcgssh8w3w" path="res://Big Nose.png" id="2_r7rx5"]
+[ext_resource type="Texture2D" uid="uid://c54kjadjpogo" path="res://Assets/Big Teeth.png" id="3_aoiax"]
+[ext_resource type="Texture2D" uid="uid://cmmgq67ask1w6" path="res://Assets/Big Ears.png" id="4_r7rx5"]
+[ext_resource type="Texture2D" uid="uid://8hfxufnscaif" path="res://Assets/Big Eyes.png" id="5_2v3k6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hncb1"]
 size = Vector2(128, 128)
@@ -9,8 +13,11 @@ size = Vector2(128, 128)
 [node name="Person" type="RigidBody2D"]
 gravity_scale = 0.0
 script = ExtResource("1_0pife")
+face_sprites = Array[Texture2D]([ExtResource("2_r7rx5"), ExtResource("3_aoiax"), ExtResource("4_r7rx5"), ExtResource("5_2v3k6")])
 
 [node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(30.999996, 139.99998)
+scale = Vector2(0.33749998, 0.33749995)
 texture = ExtResource("2_hncb1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

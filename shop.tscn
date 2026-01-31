@@ -1,10 +1,64 @@
-[gd_scene load_steps=2 format=3 uid="uid://c06akxsdcuwvs"]
+[gd_scene load_steps=7 format=3 uid="uid://c06akxsdcuwvs"]
 
-[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="1_viryw"]
+[ext_resource type="Texture2D" uid="uid://j1aco15elpb1" path="res://BG3 no item.png" id="1_viryw"]
+[ext_resource type="FontFile" uid="uid://by67u4mbmyqwn" path="res://Assets/Macondo-Regular.ttf" id="2_blqjs"]
+[ext_resource type="FontFile" uid="uid://bvgohc7oft7m7" path="res://Assets/PirataOne-Regular.ttf" id="3_fgaav"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6lah5"]
+font = ExtResource("2_blqjs")
+font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_gmb2m"]
+font = ExtResource("2_blqjs")
+font_size = 54
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8kdgp"]
+font = ExtResource("3_fgaav")
+font_size = 54
+font_color = Color(0, 0, 0, 1)
 
 [node name="Shop" type="CanvasLayer"]
 
-[node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(880, 275)
-scale = Vector2(4.3, 4.3)
+[node name="Bg3NoItem" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(0.6, 0.6)
 texture = ExtResource("1_viryw")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 905.0
+offset_bottom = 572.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "SHOP"
+label_settings = SubResource("LabelSettings_6lah5")
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Money" type="Label" parent="."]
+offset_left = 928.00037
+offset_top = 280.9999
+offset_right = 1108.0005
+offset_bottom = 356.9999
+rotation = 0.30543262
+text = "Money"
+label_settings = SubResource("LabelSettings_gmb2m")
+
+[node name="MoneyLabel" type="Label" parent="."]
+offset_left = 904.0
+offset_top = 409.99988
+offset_right = 1030.0
+offset_bottom = 480.99988
+rotation = -0.08726646
+text = "20.00$"
+label_settings = SubResource("LabelSettings_8kdgp")

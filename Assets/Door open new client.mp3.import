@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bg8oyc12pqxgt"
+path="res://.godot/imported/Door open new client.mp3-91d42144e2d6ec712eeab55f904e1a35.mp3str"
+
+[deps]
+
+source_file="res://Assets/Door open new client.mp3"
+dest_files=["res://.godot/imported/Door open new client.mp3-91d42144e2d6ec712eeab55f904e1a35.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

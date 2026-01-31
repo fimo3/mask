@@ -1,35 +1,27 @@
-[gd_scene load_steps=5 format=3 uid="uid://ofcb11kjwmbo"]
+[gd_scene load_steps=4 format=3 uid="uid://pkxn5s0gr2v0"]
 
-[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://icon.svg" id="1_b0qmb"]
+[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="1_b0qmb"]
 [ext_resource type="Script" uid="uid://c7nk5pgbikxhw" path="res://mask.gd" id="2_oilhy"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1rsgv"]
-atlas = ExtResource("1_b0qmb")
-region = Rect2(32, 64, 32, 32)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oilhy"]
+size = Vector2(127, 128)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_8yek2"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1rsgv")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[node name="mask" type="CharacterBody2D"]
+[node name="Mask" type="CharacterBody2D"]
 script = ExtResource("2_oilhy")
 
 [node name="Button" type="Button" parent="."]
 self_modulate = Color(1, 1, 1, 0)
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
+offset_left = -65.0
+offset_top = -63.0
+offset_right = 63.0
+offset_bottom = 63.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_8yek2")
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_b0qmb")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_oilhy")
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
