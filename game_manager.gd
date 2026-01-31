@@ -59,3 +59,11 @@ func get_mask_count(mask_type: int) -> int:
 
 func has_mask(mask_type: int) -> bool:
 	return get_mask_count(mask_type) > 0
+
+# Alias method for remove_mask that inventory_item calls
+func remove_mask(mask_type: int, amount: int = 1) -> bool:
+	if inventory.get(mask_type, 0) >= amount:
+		inventory[mask_type] -= amount
+		inventory_changed.emit()
+		return true
+	return false

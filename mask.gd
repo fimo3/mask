@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 @export var mask_type := 0
-@onready var placeholder: Area2D = $"../../Placeholder"
 
 var dragging = false
 var offset := Vector2.ZERO
@@ -11,26 +10,22 @@ var is_from_inventory = false
 
 func _ready() -> void:
 	start_pos = global_position
-	placeholder.body_entered.connect(_on_placeholder_body_entered)
-	placeholder.body_exited.connect(_on_placeholder_body_exited)
+	
+	# Connect button signals if they exist
+	if has_node("Button"):
+		var button = get_node("Button")
+		if not button.button_down.is_connected(_on_button_button_down):
+			button.button_down.connect(_on_button_button_down)
+		if not button.button_up.is_connected(_on_button_button_up):
+			button.button_up.connect(_on_button_button_up)
+	
+	print("Mask ready. Type: ", mask_type, " From inventory: ", is_from_inventory, " at ", global_position)
 
 func setup_from_inventory(type: int) -> void:
 	mask_type = type
 	is_from_inventory = true
+	is_placed = true  # Consider it placed when spawned from inventory
 	print("Mask setup from inventory with type: ", type)
-
-func _on_placeholder_body_entered(body: Node2D) -> void:
-	if body == self and dragging:
-		return
-	if body == self:
-		global_position = placeholder.global_position - Vector2(64, 64)
-		is_placed = true
-		print("Snapped to placeholder")
-
-func _on_placeholder_body_exited(body: Node2D) -> void:
-	if body == self:
-		is_placed = false
-		print("Left placeholder")
 
 func _physics_process(_delta: float) -> void:
 	if dragging:
@@ -38,23 +33,22 @@ func _physics_process(_delta: float) -> void:
 
 func _on_button_button_down() -> void:
 	dragging = true
-	is_placed = false
 	offset = get_global_mouse_position() - global_position
+	print("Mask drag started (type ", mask_type, ")")
 
 func _on_button_button_up() -> void:
 	dragging = false
+	print("Mask drag ended at ", global_position)
 	
-	var overlapping_bodies = placeholder.get_overlapping_bodies()
-	if self in overlapping_bodies:
-		global_position = placeholder.global_position - Vector2(64, 64)
-		is_placed = true
-		print("Placed in placeholder")
-	else:
-		if is_from_inventory:
-			# Return to inventory instead of start position
-			queue_free()
-		else:
-			global_position = start_pos
+	# Optional: If you want the mask to snap back if moved away from drop zone
+	# But for now, just let it stay where the user drops it
 
 func get_mask_type() -> int:
 	return mask_type
+
+func set_mask_texture(texture: Texture2D) -> void:
+	if has_node("Sprite"):
+		get_node("Sprite").texture = texture
+		print("✓ Set mask texture for type ", mask_type)
+	else:
+		push_error("Mask has no Sprite node!")

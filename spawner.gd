@@ -1,21 +1,17 @@
 extends Node2D
 
 @export var person_scene: PackedScene = preload("res://person.tscn")
-@export var mask_scene: PackedScene
-@onready var placeholder: Area2D = $"../Placeholder"
+@export var mask_scene: PackedScene = preload("res://mask.tscn")
+@onready var drop_zone: Control = $UI/DropZone
 @onready var start_point: Marker2D = $SpawnPoint/Start
 @onready var center_point: Marker2D = $SpawnPoint/Center
 @onready var end_point: Marker2D = $SpawnPoint/End
-@onready var next_button: Button = $"../UI/Next"
+@onready var next_button: Button = $UI/Next
 
 var people_queue: Array[Node2D] = []
 var max_people := 3
 var current_mask: Node2D = null
 var is_moving = false
-
-var inventory_ui: CanvasLayer
-var shop_ui: CanvasLayer
-var mask_drop_zone: Control  # Reference to drop zone
 
 func _ready():
 	randomize()
@@ -24,40 +20,71 @@ func _ready():
 	
 	if next_button:
 		next_button.pressed.connect(_on_next_button_pressed)
-	if placeholder:
-		placeholder.mask_dropped.connect(_on_mask_dropped)
-
-func setup_ui_references(inv: CanvasLayer, shp: CanvasLayer, drop_zone: Control) -> void:
-	inventory_ui = inv
-	shop_ui = shp
-	mask_drop_zone = drop_zone
 	
-	if mask_drop_zone:
-		mask_drop_zone.mask_dropped.connect(_on_mask_dropped)
+	# Connect to the Control-based drop zone instead of Area2D
+	if drop_zone:
+		drop_zone.mask_dropped.connect(_on_mask_dropped)
+		print("✓ Connected to drop zone")
+	else:
+		print("✗ ERROR: Drop zone not found!")
 
 func _on_mask_dropped(mask_type: int) -> void:
-	# Remove existing mask
-	if current_mask:
-		current_mask.queue_free()
+	print("=== MASK DROPPED HANDLER ===")
+	print("Mask type: ", mask_type)
 	
-	# Check and remove from inventory
+	# Remove existing mask if any
+	if current_mask:
+		print("Removing old mask")
+		current_mask.queue_free()
+		current_mask = null
+	
+	# Check if we have this mask in inventory
+	if not GameManager.has_mask(mask_type):
+		print("✗ No mask of type ", mask_type, " in inventory!")
+		return
+	
+	print("Inventory check passed, count: ", GameManager.get_mask_count(mask_type))
+	
+	# Remove from inventory
 	if GameManager.remove_mask_from_inventory(mask_type):
-		# Spawn mask
+		print("✓ Removed from inventory")
+		
+		# Spawn new mask at placeholder (the Area2D visual position)
 		current_mask = mask_scene.instantiate()
-		get_parent().add_child(current_mask)
+		add_child(current_mask)
 		
-		# Position at drop zone
-		if mask_drop_zone:
-			current_mask.global_position = mask_drop_zone.global_position + Vector2(32, 32)
-		else:
-			current_mask.global_position = Vector2(800, 300)
+		# Position at the placeholder Area2D for visual consistency
 		
+		
+		# Set mask properties
 		current_mask.mask_type = mask_type
-		print("Placed mask type ", mask_type, " from inventory")
+		current_mask.is_from_inventory = true
+		current_mask.is_placed = true
 		
-		# Close inventory after successful drop
-		if inventory_ui:
-			inventory_ui.hide()
+		# Load and set the appropriate texture
+		var texture: Texture2D
+		match mask_type:
+			0:
+				texture = load("res://Assets/icon.svg")
+			1:
+				texture = load("res://Assets/Mouth.png")
+			2:
+				texture = load("res://Assets/Ears.png")
+			3:
+				texture = load("res://Assets/Eyes.png")
+			_:
+				texture = load("res://Assets/icon.svg")
+		
+		# Set the texture using the mask's method
+		if current_mask.has_method("set_mask_texture"):
+			current_mask.set_mask_texture(texture)
+		elif current_mask.has_node("Sprite"):
+			current_mask.get_node("Sprite").texture = texture
+			print("✓ Set sprite texture directly for type ", mask_type)
+		
+		print("✓ Mask spawned successfully at ", current_mask.global_position)
+	else:
+		print("✗ Failed to remove mask from inventory")
 
 func spawn_person_at(pos):
 	var person = person_scene.instantiate()
@@ -80,7 +107,10 @@ func check_transaction(current_person: Node2D) -> void:
 		return
 	
 	if current_mask == null:
-		print("No mask placed")
+		print("No mask placed - penalty!")
+		GameManager.remove_money(GameManager.wrong_mask_penalty)
+		current_person.set_served(true)
+		flash_red()
 		return
 	
 	var person_problem = current_person.get_problem_id()
@@ -90,15 +120,11 @@ func check_transaction(current_person: Node2D) -> void:
 		GameManager.add_money(GameManager.mask_price)
 		current_person.set_served(true)
 		print("✓ Correct! +$", GameManager.mask_price)
-		
-		# Visual feedback
 		flash_green()
 	else:
 		GameManager.remove_money(GameManager.wrong_mask_penalty)
 		current_person.set_served(true)
-		print("✗ Wrong! -$", GameManager.wrong_mask_penalty)
-		
-		# Visual feedback
+		print("✗ Wrong! Expected ", person_problem, " got ", placed_mask_type, " -$", GameManager.wrong_mask_penalty)
 		flash_red()
 	
 	# Remove used mask
@@ -107,18 +133,16 @@ func check_transaction(current_person: Node2D) -> void:
 		current_mask = null
 
 func flash_green():
-	if mask_drop_zone and mask_drop_zone.has_node("PlaceholderVisual"):
-		var visual = mask_drop_zone.get_node("PlaceholderVisual")
+	if drop_zone:
 		var tween = create_tween()
-		tween.tween_property(visual, "color", Color.GREEN, 0.2)
-		tween.tween_property(visual, "color", Color(0.3, 0.3, 0.3, 0.3), 0.3)
+		tween.tween_property(drop_zone, "modulate", Color.GREEN, 0.2)
+		tween.tween_property(drop_zone, "modulate", Color.WHITE, 0.3)
 
 func flash_red():
-	if mask_drop_zone and mask_drop_zone.has_node("PlaceholderVisual"):
-		var visual = mask_drop_zone.get_node("PlaceholderVisual")
+	if drop_zone:
 		var tween = create_tween()
-		tween.tween_property(visual, "color", Color.RED, 0.2)
-		tween.tween_property(visual, "color", Color(0.3, 0.3, 0.3, 0.3), 0.3)
+		tween.tween_property(drop_zone, "modulate", Color.RED, 0.2)
+		tween.tween_property(drop_zone, "modulate", Color.WHITE, 0.3)
 
 func advance_queue():
 	if people_queue.size() > 0:

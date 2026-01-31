@@ -1,7 +1,6 @@
 extends Control
 
 @onready var money_label: Label = $Money
-@onready var inventory_button: Button = $InventoryButton
 @onready var shop_button: Button = $ShopButton
 
 signal inventory_pressed
