@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://dgidbdxx6n8se"]
+[gd_scene load_steps=4 format=3 uid="uid://dgidbdxx6n8se"]
 
-[ext_resource type="Script" uid="uid://bn0r5rcqoob4d" path="res://person.gd" id="1_0pife"]
+[ext_resource type="Script" uid="uid://dh7o4gpc6tnxf" path="res://person.gd" id="1_0pife"]
+[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="2_hncb1"]
 
-[node name="Person" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hncb1"]
+size = Vector2(128, 128)
+
+[node name="Person" type="RigidBody2D"]
+gravity_scale = 0.0
 script = ExtResource("1_0pife")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_hncb1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_hncb1")
+disabled = true

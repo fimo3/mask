@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://c06akxsdcuwvs"]
+
+[ext_resource type="Texture2D" uid="uid://duhwsatrqy7s5" path="res://Assets/icon.svg" id="1_viryw"]
+
+[node name="Shop" type="CanvasLayer"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(880, 275)
+scale = Vector2(4.3, 4.3)
+texture = ExtResource("1_viryw")

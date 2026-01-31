@@ -1,3 +1,36 @@
-[gd_scene format=3 uid="uid://bph5bu5g2y5po"]
+[gd_scene load_steps=3 format=3 uid="uid://bph5bu5g2y5po"]
+
+[ext_resource type="Script" uid="uid://bu6kibkxnfi6l" path="res://spawner.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://c06akxsdcuwvs" path="res://shop.tscn" id="2_0xm2m"]
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_ig7tw")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(-76, 228)
+
+[node name="Start" type="Marker2D" parent="SpawnPoint"]
+
+[node name="Center" type="Marker2D" parent="SpawnPoint"]
+position = Vector2(400, 0)
+
+[node name="End" type="Marker2D" parent="SpawnPoint"]
+position = Vector2(745, 0)
+
+[node name="Shop" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="Next" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 816.0
+offset_top = 548.0
+offset_right = 1152.0
+offset_bottom = 652.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Next"
+
+[connection signal="pressed" from="Next" to="." method="_on_next_button_pressed"]
